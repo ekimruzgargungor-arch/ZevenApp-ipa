@@ -103,10 +103,53 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | tee xcode_export_retry2.log || true
+            CODE_SIGNING_ALLOWED=NO | tee xcode_export_retry.log || true
 
-          echo "=== xcode_export_retry2.log (first 400 lines) ==="
-          sed -n '1,400p' xcode_export_retry2.log || true
+          echo "=== xcode_export_retry.log (first 400 lines) ==="
+          sed -n '1,400p' xcode_export_retry.log || true
+
+          echo "List exported IPA files (if any):"
+          ls -la build/ipa || true
+
+      - name: Strip entitlements team/app-id keys and retry export (CI-only)
+        run: |
+          set -euo pipefail
+
+          echo "Backup candidate entitlements/plists (CI-only)"
+          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -exec cp {} {}.bak \; || true
+
+          echo "Show entitlements/plists that may contain team/app-id (first pass)"
+          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -print | while read F; do
+            echo "---- $F ----"
+            plutil -p "$F" 2>/dev/null | sed -n '1,120p' || true
+            grep -a -n "application-identifier\|TeamIdentifier\|com.apple.developer.team-identifier" "$F" 2>/dev/null || true
+          done
+
+          echo "Strip application-identifier and team identifier keys from entitlements/plists (CI-only)"
+          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -print | while read F; do
+            echo "Processing $F"
+            /usr/libexec/PlistBuddy -c "Delete application-identifier" "$F" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Delete TeamIdentifier" "$F" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Delete com.apple.developer.team-identifier" "$F" 2>/dev/null || true
+          done
+
+          echo "Also remove any remaining .mobileprovision files (CI-only)"
+          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -exec rm -f {} \; || true
+
+          echo "Verify no team/app-id keys remain"
+          grep -a -n "application-identifier\|TeamIdentifier\|com.apple.developer.team-identifier" -R build/ZevenApp.xcarchive || echo "No team/app-id keys found"
+
+          echo "Retrying exportArchive"
+          xcodebuild -exportArchive \
+            -archivePath build/ZevenApp.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist exportOptions.plist \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_ALLOWED=NO | tee xcode_export_entitlements_retry.log || true
+
+          echo "=== xcode_export_entitlements_retry.log (first 400 lines) ==="
+          sed -n '1,400p' xcode_export_entitlements_retry.log || true
 
           echo "List exported IPA files (if any):"
           ls -la build/ipa || true
@@ -131,8 +174,11 @@ jobs:
           echo "=== xcode_archive.log (first 200 lines) ==="
           sed -n '1,200p' xcode_archive.log || true
 
-          echo "=== xcode_export_retry2.log (first 200 lines) ==="
-          sed -n '1,200p' xcode_export_retry2.log || true
+          echo "=== xcode_export_retry.log (first 200 lines) ==="
+          sed -n '1,200p' xcode_export_retry.log || true
+
+          echo "=== xcode_export_entitlements_retry.log (first 200 lines) ==="
+          sed -n '1,200p' xcode_export_entitlements_retry.log || true
 
           echo "=== xcode_export.log (first 200 lines) ==="
           sed -n '1,200p' xcode_export.log || true
