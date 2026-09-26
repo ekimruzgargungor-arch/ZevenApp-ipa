@@ -25,19 +25,9 @@ jobs:
           echo "Show build settings"
           xcodebuild -project "App/WhatsApp Legacy.xcodeproj" -scheme "WhatsApp Legacy" -configuration Release -showBuildSettings | sed -n '1,200p' || true
 
-          echo "List archive Info.plist if exists"
-          if [ -d build/ZevenApp.xcarchive ]; then
-            plutil -p build/ZevenApp.xcarchive/Info.plist || true
-            grep -a "TeamIdentifier" -n build/ZevenApp.xcarchive -R || true
-          else
-            echo "No archive found yet"
-          fi
-
-      - name: Archive inspect and clean embedded provisioning
+      - name: Archive (unsigned)
         run: |
           set -euo pipefail
-
-          echo "Archive (unsigned flags)"
           xcodebuild \
             -project "App/WhatsApp Legacy.xcodeproj" \
             -scheme "WhatsApp Legacy" \
@@ -48,144 +38,35 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             clean archive | tee xcode_archive.log
 
-          echo "Remove embedded provisioning from all apps, extensions, frameworks (CI-only)"
+      - name: Clean embedded provisioning (CI-only)
+        run: |
+          set -euo pipefail
           APP_DIRS=$(find build/ZevenApp.xcarchive -type d -name "*.app" 2>/dev/null || true)
-
           for APP in $APP_DIRS; do
             echo "Inspecting $APP"
-            if [ -f "$APP/embedded.mobileprovision" ]; then
-              echo "Removing $APP/embedded.mobileprovision"
-              rm -f "$APP/embedded.mobileprovision" || true
-            fi
-
             find "$APP" -type f -name "embedded.mobileprovision" -exec rm -f {} \; || true
           done
-
           echo "Verify no embedded.mobileprovision files remain"
-          find build/ZevenApp.xcarchive -type f -name "embedded.mobileprovision" -print || echo "No embedded.mobileprovision files remain"
+          find build/ZevenApp.xcarchive -type f -name "embedded.mobileprovision" -print || echo "None"
 
-      - name: Strip TeamIdentifier and provisioning keys and retry export (CI-only)
+      - name: Package unsigned IPA from archive
         run: |
           set -euo pipefail
-
-          echo "List .mobileprovision files in archive (before removal):"
-          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -print || echo "No .mobileprovision files found (before)"
-
-          echo "Backup all plists under archive (CI-only)"
-          find build/ZevenApp.xcarchive -type f -name "*.plist" -exec cp {} {}.bak \; || true
-
-          echo "Show candidate plists and any TeamIdentifier/Provisioning occurrences (first pass)"
-          find build/ZevenApp.xcarchive -type f -name "*.plist" -print | while read P; do
-            echo "---- $P ----"
-            plutil -p "$P" 2>/dev/null | sed -n '1,120p' || true
-            grep -a -n "TeamIdentifier\|Provisioning" "$P" 2>/dev/null || true
-          done
-
-          echo "Strip TeamIdentifier and provisioning keys from plists (CI-only)"
-          find build/ZevenApp.xcarchive -type f -name "*.plist" -print | while read P; do
-            echo "Processing $P"
-            /usr/libexec/PlistBuddy -c "Delete TeamIdentifier" "$P" 2>/dev/null || true
-            /usr/libexec/PlistBuddy -c "Delete ProvisioningProfile" "$P" 2>/dev/null || true
-            /usr/libexec/PlistBuddy -c "Delete ProvisioningProfileSpecifier" "$P" 2>/dev/null || true
-          done
-
-          echo "Also remove any remaining .mobileprovision files (CI-only)"
-          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -exec rm -f {} \; || true
-
-          echo "Verify no TeamIdentifier or .mobileprovision remain"
-          grep -a -n "TeamIdentifier" -R build/ZevenApp.xcarchive || echo "No TeamIdentifier found"
-          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -print || echo "No .mobileprovision files remain"
-
-          echo "Retrying exportArchive"
-          xcodebuild -exportArchive \
-            -archivePath build/ZevenApp.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist exportOptions.plist \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | tee xcode_export_retry.log || true
-
-          echo "=== xcode_export_retry.log (first 400 lines) ==="
-          sed -n '1,400p' xcode_export_retry.log || true
-
-          echo "List exported IPA files (if any):"
-          ls -la build/ipa || true
-
-      - name: Strip entitlements team/app-id keys and retry export (CI-only)
-        run: |
-          set -euo pipefail
-
-          echo "Backup candidate entitlements/plists (CI-only)"
-          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -exec cp {} {}.bak \; || true
-
-          echo "Show entitlements/plists that may contain team/app-id (first pass)"
-          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -print | while read F; do
-            echo "---- $F ----"
-            plutil -p "$F" 2>/dev/null | sed -n '1,120p' || true
-            grep -a -n "application-identifier\|TeamIdentifier\|com.apple.developer.team-identifier" "$F" 2>/dev/null || true
-          done
-
-          echo "Strip application-identifier and team identifier keys from entitlements/plists (CI-only)"
-          find build/ZevenApp.xcarchive -type f \( -name "*.entitlements" -o -name "*.plist" \) -print | while read F; do
-            echo "Processing $F"
-            /usr/libexec/PlistBuddy -c "Delete application-identifier" "$F" 2>/dev/null || true
-            /usr/libexec/PlistBuddy -c "Delete TeamIdentifier" "$F" 2>/dev/null || true
-            /usr/libexec/PlistBuddy -c "Delete com.apple.developer.team-identifier" "$F" 2>/dev/null || true
-          done
-
-          echo "Also remove any remaining .mobileprovision files (CI-only)"
-          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -exec rm -f {} \; || true
-
-          echo "Verify no team/app-id keys remain"
-          grep -a -n "application-identifier\|TeamIdentifier\|com.apple.developer.team-identifier" -R build/ZevenApp.xcarchive || echo "No team/app-id keys found"
-
-          echo "Retrying exportArchive"
-          xcodebuild -exportArchive \
-            -archivePath build/ZevenApp.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist exportOptions.plist \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_ALLOWED=NO | tee xcode_export_entitlements_retry.log || true
-
-          echo "=== xcode_export_entitlements_retry.log (first 400 lines) ==="
-          sed -n '1,400p' xcode_export_entitlements_retry.log || true
-
-          echo "List exported IPA files (if any):"
-          ls -la build/ipa || true
-
-      - name: Export unsigned IPA (final attempt)
-        run: |
-          set -euo pipefail
-          echo "Exporting archive to IPA (unsigned) - final"
-          xcodebuild -exportArchive \
-            -archivePath build/ZevenApp.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist exportOptions.plist \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | tee xcode_export.log || true
-
-          echo "List exported IPA files"
-          ls -la build/ipa || true
-
-      - name: Show export logs and debug
-        run: |
-          echo "=== xcode_archive.log (first 200 lines) ==="
-          sed -n '1,200p' xcode_archive.log || true
-
-          echo "=== xcode_export_retry.log (first 200 lines) ==="
-          sed -n '1,200p' xcode_export_retry.log || true
-
-          echo "=== xcode_export_entitlements_retry.log (first 200 lines) ==="
-          sed -n '1,200p' xcode_export_entitlements_retry.log || true
-
-          echo "=== xcode_export.log (first 200 lines) ==="
-          sed -n '1,200p' xcode_export.log || true
-
-          echo "Listing build and ipa directories"
-          ls -la build || true
-          ls -la build/ipa || true
+          mkdir -p build/ipa
+          APP_PATH=$(ls -d build/ZevenApp.xcarchive/Products/Applications/*.app 2>/dev/null || true)
+          if [ -z "$APP_PATH" ]; then
+            echo "No .app found in archive"
+            exit 0
+          fi
+          TMPDIR=$(mktemp -d)
+          mkdir -p "$TMPDIR/Payload"
+          cp -R "$APP_PATH" "$TMPDIR/Payload/"
+          find "$TMPDIR/Payload" -type f -name "embedded.mobileprovision" -exec rm -f {} \; || true
+          IPA_NAME="ZevenApp-Unsigned-$(date +%Y%m%d%H%M%S).ipa"
+          ( cd "$TMPDIR" && zip -r "../$IPA_NAME" Payload )
+          mv "../$IPA_NAME" build/ipa/
+          rm -rf "$TMPDIR"
+          ls -la build/ipa
 
       - name: Check for IPA
         id: check_ipa
