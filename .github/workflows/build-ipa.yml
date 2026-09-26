@@ -17,8 +17,26 @@ jobs:
         run: |
           ls -R .
 
+      - name: CI diagnostic for signing
+        run: |
+          echo "Grep signing metadata"
+          git grep -n "DEVELOPMENT_TEAM\|CODE_SIGN_STYLE\|CODE_SIGN_IDENTITY" || true
+
+          echo "Show build settings"
+          xcodebuild -project "App/WhatsApp Legacy.xcodeproj" -scheme "WhatsApp Legacy" -configuration Release -showBuildSettings | sed -n '1,200p' || true
+
+          echo "List archive Info.plist if exists"
+          if [ -d build/ZevenApp.xcarchive ]; then
+            plutil -p build/ZevenApp.xcarchive/Info.plist || true
+            grep -a "TeamIdentifier" -n build/ZevenApp.xcarchive -R || true
+          else
+            echo "No archive found yet"
+          fi
+
       - name: Build unsigned IPA
         run: |
+          set -o pipefail
+
           xcodebuild \
             -project "App/WhatsApp Legacy.xcodeproj" \
             -scheme "WhatsApp Legacy" \
@@ -27,7 +45,7 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            archive
+            clean archive | tee build_xcodebuild_archive.log
 
           xcodebuild \
             -exportArchive \
@@ -36,7 +54,7 @@ jobs:
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO | tee build_xcodebuild_export.log
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
