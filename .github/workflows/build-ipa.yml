@@ -15,12 +15,12 @@ jobs:
 
       - name: Show project tree
         run: |
-          ls -R
+          ls -R .
 
       - name: Build unsigned IPA
         run: |
           xcodebuild \
-            -workspace App/WhatsApp\ Legacy/WhatsApp\ Legacy.xcworkspace \
+            -project "App/WhatsApp Legacy.xcodeproj" \
             -scheme "WhatsApp Legacy" \
             -configuration Release \
             -archivePath build/ZevenApp.xcarchive \
@@ -37,3 +37,4 @@ jobs:
         with:
           name: ZevenApp-Unsigned-IPA
           path: build/ipa/*.ipa
+
