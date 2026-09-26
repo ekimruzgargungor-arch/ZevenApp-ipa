@@ -1,0 +1,40 @@
+name: Build Unsigned IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod install --project-directory=App/WhatsApp\ Legacy
+
+      - name: Build unsigned IPA
+        run: |
+          xcodebuild \
+            -workspace "App/WhatsApp Legacy/WhatsApp Legacy.xcworkspace" \
+            -scheme "WhatsApp Legacy" \
+            -configuration Release \
+            -archivePath build/ZevenApp.xcarchive \
+            archive
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/ZevenApp.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist exportOptions.plist
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ZevenApp-Unsigned-IPA
+          path: build/ipa/*.ipa
