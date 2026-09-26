@@ -90,3 +90,11 @@ jobs:
         with:
           name: ZevenApp-Unsigned-IPA
           path: build/ipa/*.ipa
+ 
+      - name: Show artifact download info
+        if: ${{ steps.check_ipa.outputs.found == 'true' }}
+        run: |
+          echo "IPA uploaded as artifact: ZevenApp-Unsigned-IPA"
+          echo "Download it from:"
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
