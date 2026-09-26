@@ -1796,236 +1796,102 @@
 		};
 /* End PBXVariantGroup section */
 
-/* Begin XCBuildConfiguration section */
-		C525E41D2C549FE300F2B7AB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_LINK_OBJC_RUNTIME = NO;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = /Users/gianluca18092004/Documents/asu_pid.entitlements;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 1;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				ONLY_ACTIVE_ARCH = NO;
-				"OTHER_CFLAGS[arch=armv6]" = "-DARMV6_ONLY";
-				"OTHER_CPLUSPLUSFLAGS[arch=armv6]" = "$(OTHER_CFLAGS)";
-				OTHER_LDFLAGS = "-weak-lSystem";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
-			};
-			name = Debug;
-		};
-		C525E41E2C549FE300F2B7AB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_LINK_OBJC_RUNTIME = NO;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = /Users/gianluca18092004/Documents/asu_pid.entitlements;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				OTHER_LDFLAGS = "-weak-lSystem";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		C525E4202C549FE300F2B7AB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7642S5F37T;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
-				INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/WebP",
-				);
-				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
-				PRODUCT_NAME = WhatsApp;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		C525E4212C549FE300F2B7AB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development: hellovro2225@icloud.com (X3JQ4M8S87)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7642S5F37T;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
-				INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/WebP",
-				);
-				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
-				PRODUCT_NAME = WhatsApp;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		C5E4B76B2C9617D700E16348 /* Debug_armv6 */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_LINK_OBJC_RUNTIME = NO;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = /Users/gianluca18092004/Documents/asu_pid.entitlements;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 1;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DARMV6_ONLY";
-				OTHER_LDFLAGS = "-weak-lSystem";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos;
-			};
-			name = Debug_armv6;
-		};
-		C5E4B76C2C9617D700E16348 /* Debug_armv6 */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7642S5F37T;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
-				INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/WebP",
-				);
-				OTHER_CODE_SIGN_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
-				PRODUCT_NAME = WhatsApp;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug_armv6;
-		};
-/* End XCBuildConfiguration section */
+C525E4202C549FE300F2B7AB /* Debug */ = {
+    isa = XCBuildConfiguration;
+    buildSettings = {
+        ARCHS = "$(ARCHS_STANDARD)";
+        CODE_SIGN_ENTITLEMENTS = "";
+        ENABLE_BITCODE = NO;
+        FRAMEWORK_SEARCH_PATHS = (
+            "$(inherited)",
+            "\"$(SRCROOT)\"",
+        );
+        GCC_PRECOMPILE_PREFIX_HEADER = YES;
+        GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
+        GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+        HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
+        INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
+        IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+        LIBRARY_SEARCH_PATHS = (
+            "$(inherited)",
+            "$(PROJECT_DIR)",
+            "$(PROJECT_DIR)/WebP",
+        );
+        OTHER_CODE_SIGN_FLAGS = "";
+        PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
+        PRODUCT_NAME = WhatsApp;
+        PROVISIONING_PROFILE_SPECIFIER = "";
+        SDKROOT = iphoneos;
+        TARGETED_DEVICE_FAMILY = 1;
+        WRAPPER_EXTENSION = app;
+    };
+    name = Debug;
+};
 
-/* Begin XCConfigurationList section */
-		C525E3D82C549FE300F2B7AB /* Build configuration list for PBXProject "WhatsApp Legacy" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C525E41D2C549FE300F2B7AB /* Debug */,
-				C5E4B76B2C9617D700E16348 /* Debug_armv6 */,
-				C525E41E2C549FE300F2B7AB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C525E41F2C549FE300F2B7AB /* Build configuration list for PBXNativeTarget "WhatsApp Legacy" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C525E4202C549FE300F2B7AB /* Debug */,
-				C5E4B76C2C9617D700E16348 /* Debug_armv6 */,
-				C525E4212C549FE300F2B7AB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
+C525E4212C549FE300F2B7AB /* Release */ = {
+    isa = XCBuildConfiguration;
+    buildSettings = {
+        ARCHS = "$(ARCHS_STANDARD)";
+        CODE_SIGN_ENTITLEMENTS = "";
+        ENABLE_BITCODE = NO;
+        FRAMEWORK_SEARCH_PATHS = (
+            "$(inherited)",
+            "\"$(SRCROOT)\"",
+        );
+        GCC_PRECOMPILE_PREFIX_HEADER = YES;
+        GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
+        GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+        HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
+        INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
+        IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+        LIBRARY_SEARCH_PATHS = (
+            "$(inherited)",
+            "$(PROJECT_DIR)",
+            "$(PROJECT_DIR)/WebP",
+        );
+        OTHER_CODE_SIGN_FLAGS = "";
+        PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
+        PRODUCT_NAME = WhatsApp;
+        PROVISIONING_PROFILE_SPECIFIER = "";
+        SDKROOT = iphoneos;
+        TARGETED_DEVICE_FAMILY = 1;
+        WRAPPER_EXTENSION = app;
+    };
+    name = Release;
+};
+
+C5E4B76C2C9617D700E16348 /* Debug_armv6 */ = {
+    isa = XCBuildConfiguration;
+    buildSettings = {
+        ARCHS = "$(ARCHS_STANDARD)";
+        CODE_SIGN_ENTITLEMENTS = "";
+        ENABLE_BITCODE = NO;
+        FRAMEWORK_SEARCH_PATHS = (
+            "$(inherited)",
+            "\"$(SRCROOT)\"",
+        );
+        GCC_PRECOMPILE_PREFIX_HEADER = YES;
+        GCC_PREFIX_HEADER = "WhatsApp Legacy/WhatsApp Legacy-Prefix.pch";
+        GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+        HEADER_SEARCH_PATHS = "$(SRCROOT)/WebP/Headers/**";
+        INFOPLIST_FILE = "WhatsApp Legacy/WhatsApp Legacy-Info.plist";
+        IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+        LIBRARY_SEARCH_PATHS = (
+            "$(inherited)",
+            "$(PROJECT_DIR)",
+            "$(PROJECT_DIR)/WebP",
+        );
+        OTHER_CODE_SIGN_FLAGS = "";
+        PRODUCT_BUNDLE_IDENTIFIER = rs.murdle.ZevenApp;
+        PRODUCT_NAME = WhatsApp;
+        PROVISIONING_PROFILE_SPECIFIER = "";
+        SDKROOT = iphoneos;
+        TARGETED_DEVICE_FAMILY = 1;
+        WRAPPER_EXTENSION = app;
+    };
+    name = Debug_armv6;
+};
+
 	};
 	rootObject = C525E3D52C549FE300F2B7AB /* Project object */;
 }
