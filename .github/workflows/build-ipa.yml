@@ -58,15 +58,22 @@ jobs:
             echo "No .app found in archive"
             exit 0
           fi
+
           TMPDIR=$(mktemp -d)
           mkdir -p "$TMPDIR/Payload"
           cp -R "$APP_PATH" "$TMPDIR/Payload/"
           find "$TMPDIR/Payload" -type f -name "embedded.mobileprovision" -exec rm -f {} \; || true
+
           IPA_NAME="ZevenApp-Unsigned-$(date +%Y%m%d%H%M%S).ipa"
-          ( cd "$TMPDIR" && zip -r "../$IPA_NAME" Payload )
-          mv "../$IPA_NAME" build/ipa/
+          echo "Creating $IPA_NAME"
+
+          # zip doğrudan build/ipa içine yazdırılıyor
+          ( cd "$TMPDIR" && zip -r "$GITHUB_WORKSPACE/build/ipa/$IPA_NAME" Payload )
+
           rm -rf "$TMPDIR"
+          echo "Unsigned IPA created at build/ipa/$IPA_NAME"
           ls -la build/ipa
+
 
       - name: Check for IPA
         id: check_ipa
