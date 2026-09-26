@@ -24,6 +24,9 @@ jobs:
             -scheme "WhatsApp Legacy" \
             -configuration Release \
             -archivePath build/ZevenApp.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
             archive
 
           xcodebuild \
@@ -31,13 +34,9 @@ jobs:
             -archivePath build/ZevenApp.xcarchive \
             -exportPath build/ipa \
             -exportOptionsPlist exportOptions.plist
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ZevenApp-Unsigned-IPA
           path: build/ipa/*.ipa
-
