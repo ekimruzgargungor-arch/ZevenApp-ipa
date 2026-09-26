@@ -16,7 +16,7 @@ jobs:
       - name: Build unsigned IPA
         run: |
           xcodebuild \
-            -workspace "App/WhatsApp Legacy/WhatsApp Legacy.xcworkspace" \
+            -workspace App/WhatsApp\ Legacy/WhatsApp\ Legacy.xcworkspace \
             -scheme "WhatsApp Legacy" \
             -configuration Release \
             -archivePath build/ZevenApp.xcarchive \
