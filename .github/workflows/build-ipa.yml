@@ -58,12 +58,39 @@ jobs:
               rm -f "$APP/embedded.mobileprovision" || true
             fi
 
-            # extensions ve frameworks içindeki provisioning'ları da temizle
             find "$APP" -type f -name "embedded.mobileprovision" -exec rm -f {} \; || true
           done
 
           echo "Verify no provisioning files remain"
           find build/ZevenApp.xcarchive -type f -name "embedded.mobileprovision" -print || echo "No embedded.mobileprovision files remain"
+
+      - name: Remove all embedded provisioning and retry export (CI-only)
+        run: |
+          set -euo pipefail
+
+          echo "List .mobileprovision files in archive (before removal):"
+          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -print || echo "No .mobileprovision files found (before)"
+
+          echo "Removing all .mobileprovision files from archive (CI-only)"
+          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -exec rm -f {} \; || true
+
+          echo "Verify removal (should print nothing):"
+          find build/ZevenApp.xcarchive -type f -name "*.mobileprovision" -print || echo "No .mobileprovision files remain"
+
+          echo "Retrying exportArchive"
+          xcodebuild -exportArchive \
+            -archivePath build/ZevenApp.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist exportOptions.plist \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO | tee xcode_export_retry.log || true
+
+          echo "=== xcode_export_retry.log (first 400 lines) ==="
+          sed -n '1,400p' xcode_export_retry.log || true
+
+          echo "List exported IPA files (if any):"
+          ls -la build/ipa || true
 
       - name: Export unsigned IPA
         run: |
