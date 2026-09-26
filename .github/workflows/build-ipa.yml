@@ -31,6 +31,9 @@ jobs:
             -archivePath build/ZevenApp.xcarchive \
             -exportPath build/ipa \
             -exportOptionsPlist exportOptions.plist
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
