@@ -33,10 +33,13 @@ jobs:
             echo "No archive found yet"
           fi
 
-      - name: Build unsigned IPA
+      - name: Archive inspect and clean embedded provisioning
         run: |
-          set -o pipefail
+          set -euo pipefail
+          echo "Clean build dir"
+          rm -rf build || true
 
+          echo "Archive (unsigned flags)"
           xcodebuild \
             -project "App/WhatsApp Legacy.xcodeproj" \
             -scheme "WhatsApp Legacy" \
@@ -45,16 +48,44 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            clean archive | tee build_xcodebuild_archive.log
+            clean archive | tee xcode_archive.log
 
-          xcodebuild \
-            -exportArchive \
+          echo "List archive contents"
+          ls -la build/ZevenApp.xcarchive || true
+          echo "Show Info.plist from archive"
+          plutil -p build/ZevenApp.xcarchive/Info.plist || true
+
+          echo "Check for embedded.mobileprovision inside app"
+          APP_PATH=$(ls -d build/ZevenApp.xcarchive/Products/Applications/*.app 2>/dev/null || true)
+          if [ -n "$APP_PATH" ] && [ -f "$APP_PATH/embedded.mobileprovision" ]; then
+            echo "embedded.mobileprovision FOUND at $APP_PATH/embedded.mobileprovision"
+            echo "Dump TeamIdentifier from provisioning (if possible)"
+            security cms -D -i "$APP_PATH/embedded.mobileprovision" > /tmp/prov.plist 2>/dev/null || true
+            plutil -p /tmp/prov.plist | sed -n '1,200p' || true
+            grep -a "TeamIdentifier" -n /tmp/prov.plist || true
+
+            echo "Removing embedded.mobileprovision to avoid export requiring a Team"
+            rm -f "$APP_PATH/embedded.mobileprovision" || true
+            echo "Verify removal"
+            ls -la "$APP_PATH" || true
+          else
+            echo "No embedded.mobileprovision found"
+          fi
+
+      - name: Export unsigned IPA
+        run: |
+          set -euo pipefail
+          echo "Exporting archive to IPA (unsigned)"
+          xcodebuild -exportArchive \
             -archivePath build/ZevenApp.xcarchive \
             -exportPath build/ipa \
             -exportOptionsPlist exportOptions.plist \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | tee build_xcodebuild_export.log
+            CODE_SIGNING_ALLOWED=NO | tee xcode_export.log || true
+
+          echo "List exported IPA files"
+          ls -la build/ipa || true
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
