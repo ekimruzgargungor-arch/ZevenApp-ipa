@@ -3,15 +3,12 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>ad-hoc</string>
+    <string>release-testing</string>
 
     <key>signingStyle</key>
     <string>manual</string>
 
     <key>signingCertificate</key>
-    <string></string>
-
-    <key>teamID</key>
     <string></string>
 
     <key>provisioningProfiles</key>
