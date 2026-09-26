@@ -16,7 +16,7 @@ jobs:
       - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
-          pod install --project-directory=App/WhatsApp\ Legacy
+          pod install --project-directory="App/WhatsApp Legacy"
 
       - name: Build unsigned IPA
         run: |
